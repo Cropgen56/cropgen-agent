@@ -1,0 +1,34 @@
+{
+  "name": "cropgen-agent",
+  "version": "1.0.0",
+  "description": "llm base cropgen ai agent",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ai",
+    "agnet",
+    "llm",
+    "cropgen"
+  ],
+  "author": "vishal maske",
+  "license": "ISC",
+  "dependencies": {
+    "@langchain/community": "^0.3.50",
+    "@langchain/openai": "^0.6.6",
+    "axios": "^1.11.0",
+    "cheerio": "^1.1.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "joi": "^18.0.0",
+    "langchain": "^0.3.30",
+    "mongoose": "^8.17.0",
+    "openai": "^4.62.1",
+    "redis": "^5.8.0",
+    "socket.io": "^4.8.1"
+  }
+}
