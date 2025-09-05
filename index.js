@@ -11,14 +11,14 @@ const app = express();
 const server = http.createServer(app);
 
 // ---------- MongoDB (unchanged) ----------
-mongoose.connect("mongodb://localhost:27017/cropgen_ai", {
+mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
 // ---------- EJS view engine (ADDED) ----------
 const __dirname = path.resolve();
-app.set("views", path.join(__dirname, "views")); // ensure folder ./views exists
+app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 // (optional) serve static files from ./public if you want css/images used by template
