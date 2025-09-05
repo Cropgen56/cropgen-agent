@@ -24,6 +24,10 @@ app.set("view engine", "ejs");
 // (optional) serve static files from ./public if you want css/images used by template
 app.use(express.static(path.join(__dirname, "public")));
 
+app.get("/", (req, res) => {
+  res.send("Hello World! Go to /agent to see the dashboard.");
+});
+
 // ---------- Route to render EJS (ADDED) ----------
 app.get("/agent", (req, res) => {
   // keep this minimal — only data required by the view
