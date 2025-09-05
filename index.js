@@ -36,6 +36,6 @@ app.get("/agent", (req, res) => {
 // ---------- existing socket setup & server start (unchanged) ----------
 setupSocket(server);
 
-server.listen(3001, () => {
-  console.log("Server running on http://localhost:3001");
+server.listen(3002, () => {
+  console.log("Server running on http://localhost:3002");
 });
