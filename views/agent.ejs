@@ -3,151 +3,217 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CropGen Chatbot</title>
+    <title><%= title || 'Agent' %> — CropGen AI</title>
     <style>
       body {
-        font-family: "Segoe UI", Arial, sans-serif;
-        background: #f0f2f5;
         margin: 0;
-        padding: 0;
+        font-family: "Inter", Arial, sans-serif;
+        background: linear-gradient(135deg, #eef6ef, #f3f7fb);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
       }
-
-      /* Chat container */
-      #chat {
+      .chat-container {
         width: 100%;
-        max-width: 700px;
-        margin: 40px auto;
+        max-width: 600px;
+        height: 80vh;
         background: #fff;
-        border-radius: 12px;
+        border-radius: 18px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
         display: flex;
         flex-direction: column;
-        height: 80vh;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
       }
-
-      /* Header */
-      #chat header {
-        padding: 16px 20px;
-        background: #2f6b10;
+      .chat-header {
+        background: linear-gradient(90deg, #2f6b10, #246b27);
         color: #fff;
-        border-radius: 12px 12px 0 0;
-        font-size: 18px;
+        padding: 16px;
         font-weight: 600;
+        font-size: 16px;
+        text-align: center;
+        letter-spacing: 0.5px;
       }
-
-      /* Messages list */
-      #messages {
-        list-style-type: none;
-        padding: 20px;
-        margin: 0;
+      .messages {
         flex: 1;
+        padding: 16px;
         overflow-y: auto;
         background: #f9fafb;
       }
-
-      #messages li {
-        margin: 10px 0;
+      .msg {
+        margin: 8px 0;
         max-width: 75%;
-        padding: 10px 14px;
-        border-radius: 18px;
-        line-height: 1.4;
-        font-size: 15px;
-        word-wrap: break-word;
+        padding: 12px 16px;
+        border-radius: 14px;
+        line-height: 1.5;
+        word-break: break-word;
+        font-size: 14px;
+        animation: fadeIn 0.3s ease;
       }
-
-      /* User messages */
-      .user {
+      .msg.user {
         background: #d1e7dd;
         color: #0f5132;
         margin-left: auto;
         border-bottom-right-radius: 4px;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
       }
-
-      /* Bot messages */
-      .bot {
-        background: #f8d7da;
-        color: #842029;
+      .msg.bot {
+        background: #f1f5f9;
+        color: #111;
         margin-right: auto;
         border-bottom-left-radius: 4px;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
       }
-
-      /* Form */
-      #form {
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(5px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .input-area {
         display: flex;
-        padding: 16px;
         border-top: 1px solid #eee;
         background: #fff;
-        border-radius: 0 0 12px 12px;
+        padding: 10px;
       }
-
-      #input {
+      .input-area input {
         flex: 1;
         padding: 12px 14px;
         border: 1px solid #ccc;
         border-radius: 20px;
         outline: none;
-        font-size: 15px;
+        font-size: 14px;
+        transition: border 0.2s ease;
       }
-
-      #send {
+      .input-area input:focus {
+        border-color: #2f6b10;
+      }
+      .input-area button {
         margin-left: 10px;
-        padding: 12px 18px;
+        background: linear-gradient(90deg, #2f6b10, #246b27);
+        color: #fff;
         border: none;
         border-radius: 20px;
-        background: #2f6b10;
-        color: #fff;
+        padding: 0 20px;
         font-weight: 600;
         cursor: pointer;
         transition: background 0.2s ease;
       }
-
-      #send:hover {
+      .input-area button:hover {
         background: #24500c;
+      }
+
+      /* typing indicator */
+      .typing {
+        display: inline-flex;
+        gap: 4px;
+        align-items: center;
+        padding: 8px 12px;
+        background: #f1f5f9;
+        border-radius: 12px;
+        margin-right: auto;
+        margin-top: 8px;
+      }
+      .dot {
+        width: 6px;
+        height: 6px;
+        background: #999;
+        border-radius: 50%;
+        animation: blink 1.2s infinite;
+      }
+      .dot:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .dot:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+      @keyframes blink {
+        0%,
+        80%,
+        100% {
+          opacity: 0.4;
+        }
+        40% {
+          opacity: 1;
+        }
       }
     </style>
   </head>
   <body>
-    <div id="chat">
-      <header>🤖 CropGen Chatbot</header>
-      <ul id="messages"></ul>
-      <form id="form">
-        <input id="input" autocomplete="off" placeholder="Type a message..." />
-        <button id="send">Send</button>
-      </form>
+    <div class="chat-container">
+      <div class="chat-header">🤖 CropGen AI Agent</div>
+      <div class="messages" id="messages"></div>
+      <div class="input-area">
+        <input
+          id="inputBox"
+          placeholder="Type a message..."
+          autocomplete="off"
+        />
+        <button id="sendBtn">Send</button>
+      </div>
     </div>
 
+    <!-- Socket.IO -->
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <script>
-      const socket = io("http://localhost:3002");
+      const socket = io(window.location.origin, { path: "/v3/socket.io" });
 
-      const form = document.getElementById("form");
-      const input = document.getElementById("input");
+      const inputBox = document.getElementById("inputBox");
+      const sendBtn = document.getElementById("sendBtn");
       const messages = document.getElementById("messages");
+      let typingEl = null;
 
-      // send message
-      form.addEventListener("submit", function (e) {
-        e.preventDefault();
-        if (input.value.trim()) {
-          const msg = input.value;
-          appendMessage("user", msg);
-          socket.emit("user_message", msg);
-          input.value = "";
-        }
-      });
-
-      // receive bot response
-      socket.on("ai_response", function (msg) {
-        appendMessage("bot", msg);
-      });
-
-      // append message helper
-      function appendMessage(sender, text) {
-        const item = document.createElement("li");
-        item.className = sender;
-        item.textContent = text;
-        messages.appendChild(item);
+      function addMessage(text, sender) {
+        if (sender === "bot") hideTyping();
+        const div = document.createElement("div");
+        div.className = "msg " + sender;
+        div.textContent = text;
+        messages.appendChild(div);
         messages.scrollTop = messages.scrollHeight;
       }
+
+      function showTyping() {
+        if (typingEl) return;
+        typingEl = document.createElement("div");
+        typingEl.className = "typing";
+        typingEl.innerHTML =
+          '<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+        messages.appendChild(typingEl);
+        messages.scrollTop = messages.scrollHeight;
+      }
+
+      function hideTyping() {
+        if (typingEl) {
+          typingEl.remove();
+          typingEl = null;
+        }
+      }
+
+      function sendMessage() {
+        const text = inputBox.value.trim();
+        if (!text) return;
+        addMessage(text, "user");
+        socket.emit("user_message", text);
+        inputBox.value = "";
+        showTyping();
+      }
+
+      sendBtn.onclick = sendMessage;
+      inputBox.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") sendMessage();
+      });
+
+      socket.on("ai_response", (msg) => {
+        if (msg) addMessage(msg, "bot");
+      });
+      socket.on("connect", () => addMessage("Connected to server.", "bot"));
+      socket.on("disconnect", () =>
+        addMessage("Disconnected. Reconnecting...", "bot")
+      );
     </script>
   </body>
 </html>

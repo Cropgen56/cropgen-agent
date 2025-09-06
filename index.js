@@ -1,45 +1,55 @@
+// server.js
 import express from "express";
 import http from "http";
 import dotenv from "dotenv";
-import { setupSocket } from "./src/socket/setupSocket.js";
 import mongoose from "mongoose";
 import path from "path";
+import { fileURLToPath } from "url";
+import { setupSocket } from "./src/socket/setupSocket.js";
 
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const server = http.createServer(app);
 
-// ---------- MongoDB (unchanged) ----------
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+// ---------- MongoDB ----------
+mongoose
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => {
+    console.error("MongoDB connection error:", err);
+    process.exit(1);
+  });
 
-// ---------- EJS view engine (ADDED) ----------
-const __dirname = path.resolve();
+// ---------- View engine & static ----------
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
-
-// (optional) serve static files from ./public if you want css/images used by template
 app.use(express.static(path.join(__dirname, "public")));
 
+// Health / root
 app.get("/", (req, res) => {
-  res.send("Hello World! Go to /agent to see the dashboard.");
+  res.send("Hello World! Go to /v3/agent to see the dashboard.");
 });
 
-// ---------- Route to render EJS (ADDED) ----------
-app.get("/agent", (req, res) => {
-  // keep this minimal — only data required by the view
+// Render agent view under /v3/agent
+app.get("/v3/agent", (req, res) => {
   res.render("agent", {
     title: "Agent Dashboard",
     user: { name: "Agent", role: "agent" },
   });
 });
 
-// ---------- existing socket setup & server start (unchanged) ----------
+// ---------- Socket setup ----------
 setupSocket(server);
 
-server.listen(3002, () => {
-  console.log("Server running on http://localhost:3002");
+// ---------- Start server ----------
+const PORT = process.env.PORT || 3002;
+server.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
