@@ -16,10 +16,11 @@ const app = express();
 const server = http.createServer(app);
 
 // ---------- MongoDB ----------
+console.log("MONGO_URI:", process.env.MONGO_URI);
+
 mongoose
   .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+    family: 4
   })
   .then(() => console.log("MongoDB connected"))
   .catch((err) => {
@@ -53,3 +54,4 @@ const PORT = process.env.PORT || 3002;
 server.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+

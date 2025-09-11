@@ -16,13 +16,13 @@ const userStates = new Map();
 
 const organizationQuestions = [
   "What is the name of your organization?",
-  "What is the contact number of your organization? (Include 10 digits, country code will be added automatically)",
+  "What is the contact number of your organization?",
   "What is the email address of your organization?",
 ];
 
 const farmerQuestions = [
   "What is your name?",
-  "What is your contact number? (Include 10 digits, country code will be added automatically)",
+  "What is your contact number?",
 ];
 
 export const setupSocket = (httpServer) => {
@@ -42,7 +42,7 @@ export const setupSocket = (httpServer) => {
     // Welcome
     socket.emit(
       "ai_response",
-      "Welcome! Are you: 1) an organization, 2) a farmer, or 3) here to know about Cropgen? Please reply with 1, 2, or 3."
+      "Welcome! To help you better, could you tell me who you are?"
     );
 
     socket.on("user_message", async (msg) => {
@@ -93,14 +93,37 @@ export const setupSocket = (httpServer) => {
             : ["name", "contact"];
         const field = fields[step];
 
-        // Format contact field
         let value = cleanedMsg;
-        if (field === "contact") {
+
+        // Field-level validation
+        let errorMsg = null;
+        if (field === "name") {
+          if (value.length < 3) {
+            errorMsg =
+              "Please enter a valid name with at least 3 characters.";
+          }
+        } else if (field === "contact") {
           value = value.replace(/\D/g, "");
-          if (value.length === 10) {
+          if (value.length !== 10) {
+            errorMsg =
+              "Please enter a valid 10-digit mobile number";
+          } else {
             value = `+91${value}`;
           }
+        } else if (field === "email") {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(value)) {
+            errorMsg = "Please enter a valid email address.";
+          }
         }
+
+        if (errorMsg) {
+          socket.emit("ai_response", errorMsg);
+          // repeat same question without moving to next step
+          socket.emit("ai_response", state.questions[step]);
+          return;
+        }
+
 
         state.data[field] = value;
         state.step++;
@@ -177,3 +200,4 @@ export const setupSocket = (httpServer) => {
     });
   });
 };
+
