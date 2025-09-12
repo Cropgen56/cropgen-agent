@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "@langchain/community": "^0.3.50",
+    "@langchain/google-genai": "^0.2.17",
     "@langchain/openai": "^0.6.6",
     "axios": "^1.11.0",
     "cheerio": "^1.1.2",
@@ -24,6 +25,7 @@
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
+    "google-libphonenumber": "^3.2.42",
     "joi": "^18.0.0",
     "langchain": "^0.3.30",
     "mongoose": "^8.17.0",
