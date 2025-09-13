@@ -8,6 +8,7 @@ import { validateFarmer } from "../validations/farmerValidation.js";
 import pkg from "google-libphonenumber";
 const { PhoneNumberUtil } = pkg;
 
+
 const phoneUtil = PhoneNumberUtil.getInstance();
 
 // In-memory maps for tracking states and AI agents
@@ -27,12 +28,12 @@ const farmerQuestions = [
 ];
 
 const createEmptyState = () => ({
-  type: null,       
-  step: 0,          
-  data: {},      
-  questions: [],    
-  history: [],      
-  userObject: null, 
+  type: null,
+  step: 0,
+  data: {},
+  questions: [],
+  history: [],
+  userObject: null,
 });
 
 // Setup Socket.io server
@@ -188,8 +189,6 @@ export const setupSocket = (httpServer) => {
 
               state.userObject = savedUser; // store ObjectId
               recordMessage("ai", `${state.type} details saved successfully.`);
-
-              socket.emit("ai_response", `${state.type.charAt(0).toUpperCase() + state.type.slice(1)} details saved successfully.`);
               socket.emit("ai_response", "How can I assist you further?");
 
               // Reset state for general conversation
