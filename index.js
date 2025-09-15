@@ -6,6 +6,8 @@ import mongoose from "mongoose";
 import path from "path";
 import { fileURLToPath } from "url";
 import { setupSocket } from "./src/socket/setupSocket.js";
+import chatroute from "./src/routes/chatroute.js";
+import cors from "cors";
 
 dotenv.config();
 
@@ -14,6 +16,19 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const server = http.createServer(app);
+app.use(express.json());
+
+app.use(
+  cors({
+<<<<<<< Updated upstream
+    origin: "https://admin.cropgenapp.com", // allow your Vite frontend
+=======
+    origin: "http://localhost:5173",
+>>>>>>> Stashed changes
+    methods: ["GET", "POST", "DELETE", "PUT"],
+    credentials: true,
+  })
+);
 
 // ---------- MongoDB ----------
 
@@ -31,6 +46,8 @@ mongoose
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use("/api/chats", chatroute);
 
 // Health / root
 app.get("/", (req, res) => {
