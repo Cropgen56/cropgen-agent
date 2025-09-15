@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 import path from "path";
 import { fileURLToPath } from "url";
 import { setupSocket } from "./src/socket/setupSocket.js";
-import chatroute from "./src/routes/chatroute.js"
+import chatroute from "./src/routes/chatroute.js";
 import cors from "cors";
 
 dotenv.config();
@@ -20,19 +20,22 @@ app.use(express.json());
 
 app.use(
   cors({
+<<<<<<< Updated upstream
     origin: "https://admin.cropgenapp.com", // allow your Vite frontend
+=======
+    origin: "http://localhost:5173",
+>>>>>>> Stashed changes
     methods: ["GET", "POST", "DELETE", "PUT"],
     credentials: true,
   })
 );
-
 
 // ---------- MongoDB ----------
 console.log("MONGO_URI:", process.env.MONGO_URI);
 
 mongoose
   .connect(process.env.MONGO_URI, {
-    family: 4
+    family: 4,
   })
   .then(() => console.log("MongoDB connected"))
   .catch((err) => {
@@ -44,7 +47,6 @@ mongoose
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
-
 
 app.use("/api/chats", chatroute);
 
@@ -69,4 +71,3 @@ const PORT = process.env.PORT || 3002;
 server.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
-
