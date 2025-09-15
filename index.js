@@ -20,7 +20,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "http://localhost:5173", // allow your Vite frontend
+    origin: "https://admin.cropgenapp.com", // allow your Vite frontend
     methods: ["GET", "POST", "DELETE", "PUT"],
     credentials: true,
   })
