@@ -20,11 +20,7 @@ app.use(express.json());
 
 app.use(
   cors({
-<<<<<<< Updated upstream
-    origin: "https://admin.cropgenapp.com", // allow your Vite frontend
-=======
-    origin: "http://localhost:5173",
->>>>>>> Stashed changes
+    origin: ["http://localhost:5173", "https://admin.cropgenapp.com"],
     methods: ["GET", "POST", "DELETE", "PUT"],
     credentials: true,
   })
