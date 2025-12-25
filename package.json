@@ -16,7 +16,8 @@
   "author": "vishal maske",
   "license": "ISC",
   "dependencies": {
-    "@langchain/community": "^0.3.50",
+    "@huggingface/inference": "^4.13.5",
+    "@langchain/community": "^0.3.58",
     "@langchain/google-genai": "^0.2.17",
     "@langchain/openai": "^0.6.6",
     "axios": "^1.11.0",
